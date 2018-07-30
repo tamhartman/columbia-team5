@@ -12,10 +12,10 @@ $.ajax({
    
     for (var i = 0; i < response.items.length; i++) {
         console.log(response.items[i].volumeInfo.title);
+        $("#book-div").append("<div id="+ response.items[i].id+"> <div>"+ response.items[i].volumeInfo.title
+        +"</div><img src='"+response.items[i].volumeInfo.imageLinks.smallThumbnail+"' /> </div>");
     }
     
-//         var author = response.items[0].value;
-//         var imageSrc = bookInfo.imageLinks.thumbnail;
     })
 }
 
