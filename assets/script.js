@@ -12,12 +12,17 @@ $.ajax({
    
     for (var i = 0; i < response.items.length; i++) {
         console.log(response.items[i].volumeInfo.title);
-        $("#book-div").append("<div id="+ response.items[i].id+"> <div>"+ response.items[i].volumeInfo.title
-        +"</div><img src='"+response.items[i].volumeInfo.imageLinks.smallThumbnail+"' /> </div>");
+        $("#book-div").prepend("<div id="+ response.items[i].id+"> <div>"+ response.items[i].volumeInfo.title +"</div>");
+        $("#book-div").prepend("<div id="+ response.items[i].id+"> <div>"+ response.items[i].volumeInfo.authors+"</div>");
+       $("#book-div").prepend("<div id="+ response.items[i].id + "> <div>"+ "<img src='" +  response.items[i].volumeInfo.imageLinks.smallThumbnail +"'</div>");
+       $("#book-div").prepend("<button id='upvoteButton'>Upvote</button>");
+       $("#book-div").prepend("<button id='downvoteButton'>Downvote</button>");
+ 
+       
     }
     
     })
-}
+  }
 
 $("#book-submit").submit(function(e){
     e.preventDefault();
@@ -30,10 +35,4 @@ $("#book-submit").submit(function(e){
 
 
 
-// $("#books-continer").append(
-//     '<div class ="book-container"><h2> class="book-title">
-//     ${title} </h2>
-//     img src=${imageSrc}>
-// </div>)
-
-// )})
+ 
