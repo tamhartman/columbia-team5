@@ -17,28 +17,29 @@ var numberofSearches = 0;
 
 //API function to get book SEARCH information from Google API
 function getBooks(book) {
-$.ajax({
-    url: "https://www.googleapis.com/books/v1/volumes?q=" + book,
-    method:"GET"
-}).then(function(response){
-    console.log(response);
-  
-    var bookInfo = response.items
-    ;
-
-    console.log(bookInfo);
+    $.ajax({
+        url: "https://www.googleapis.com/books/v1/volumes?q=" + book,
+        method:"GET"
+    }).then(function(response){
+        console.log(response);
+        var bookInfo = response.items;
+        console.log(bookInfo);
 
 //For loop for the number of results that are given from the Google API
 //Results are appended on top of one another 
    
     for (var i = 0; i < response.items.length; i++) {
         console.log(response.items[i].volumeInfo.title);
-        $("#book-div").append("<div id="+ response.items[i].id+"> <div>"+ response.items[i].volumeInfo.title
-        +"</div><img src='"+response.items[i].volumeInfo.imageLinks.smallThumbnail+"' /> <button class='recommended-book' id='"+response.items[i].id+"'>Select</button></div>");
-    }
-    addRecommendedBookClickHandlers();
-    })
-}
+
+        $("#book-div").append("<div class = 'bookTitleDiv' id="+ response.items[i].id+"> <div>"+ response.items[i].volumeInfo.title +"</div>");
+        $("#book-div").append("<div class= 'bookAuthorDiv' id="+ response.items[i].id+"> <div>"+ response.items[i].volumeInfo.authors+"</div>");
+        $("#book-div").append("<div class = 'bookImageDiv' id="+ response.items[i].id + "> <div>"+ "<img src='" +  response.items[i].volumeInfo.imageLinks.smallThumbnail +"'</div>");
+        $("#book-div").append("<button class= 'recommendedBookButton' id ='" + response.items[i].id + "'>Recommend</button>");
+    }  
+
+});
+
+};
 
 // //API function to get book ID information from Google API
 function addBooktoFirebase(bookID) {
@@ -55,8 +56,8 @@ function addBooktoFirebase(bookID) {
             bookStoredImage: response.volumeInfo.imageLinks.smallThumbnail,
         });
         
-    })
-}
+    });
+};
 
 //On-click function when the user clicks submit 
 //Captures the user input data and then runs the getBooks function
@@ -65,6 +66,9 @@ $("#book-entry").on("click", function(e){
     e.preventDefault();
     var book = $("#book").val();
     getBooks(book);
+    setTimeout(function(){
+        addRecommendedBookClickHandlers();
+    }, 1000);
     console.log(book)
     numberofSearches++;
     database.ref().set({
@@ -78,10 +82,11 @@ $("#book-entry").on("click", function(e){
 
 
 function addRecommendedBookClickHandlers() {
-    $(".recommended-book").on("click", function(e){
+        $(".recommendedBookButton").on("click", function(e){
+        console.log("You clicked me!!");
         e.preventDefault();
         var bookID = $(this).attr("id");
         console.log(bookID);
         addBooktoFirebase(bookID);
-    });
+        });
 }
