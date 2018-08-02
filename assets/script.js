@@ -52,9 +52,15 @@ function addBooktoFirebase(bookID) {
         database.ref().set({
             bookStoredID: response.id,
             bookStoredTitle: response.volumeInfo.title,
-            bookStoredAuthor: response.volumeInfo.authors,
+            bookStoredAuthor: response.volumeInfo.authors[0],
             bookStoredImage: response.volumeInfo.imageLinks.smallThumbnail,
         });
+
+        $("#recommendations").append("<div class = 'bookTitleDivAdded' id="+ response.id+"> <div>"+ response.volumeInfo.title +"</div>");
+        $("#recommendations").append("<div class= 'bookAuthorDivAdded' id="+ response.id+"> <div>"+ response.volumeInfo.authors[0]+"</div>");
+        $("#recommendations").append("<div class = 'bookImageDivAdded' id="+ response.id + "> <div>"+ "<img src='" +  response.volumeInfo.imageLinks.smallThumbnail +"'</div>");
+        $("#recommendations").append("<button class= 'upVoteButton' id ='" + response.id + "'>UpVote</button>");
+        $("#recommendations").append("<button class= 'downVoteButton' id ='" + response.id + "'>Downvote</button>");
         
     });
 };
@@ -82,11 +88,11 @@ $("#book-entry").on("click", function(e){
 
 
 function addRecommendedBookClickHandlers() {
-        $(".recommendedBookButton").on("click", function(e){
+    $(".recommendedBookButton").on("click", function(e){
         console.log("You clicked me!!");
         e.preventDefault();
         var bookID = $(this).attr("id");
         console.log(bookID);
         addBooktoFirebase(bookID);
-        });
+    });
 }
