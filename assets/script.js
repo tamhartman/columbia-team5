@@ -49,18 +49,22 @@ function addBooktoFirebase(bookID) {
     }).then(function(response){
         console.log(response);
         
-        database.ref().set({
+        var mypush = database.ref().child("books").push({
+            upVotes:0,
+            downVotes:0,
             bookStoredID: response.id,
             bookStoredTitle: response.volumeInfo.title,
             bookStoredAuthor: response.volumeInfo.authors[0],
             bookStoredImage: response.volumeInfo.imageLinks.smallThumbnail,
         });
-
+        var key = mypush.getKey() 
+        console.log(key)
         $("#recommendations").append("<div class = 'bookTitleDivAdded' id="+ response.id+"> <div>"+ response.volumeInfo.title +"</div>");
         $("#recommendations").append("<div class= 'bookAuthorDivAdded' id="+ response.id+"> <div>"+ response.volumeInfo.authors[0]+"</div>");
         $("#recommendations").append("<div class = 'bookImageDivAdded' id="+ response.id + "> <div>"+ "<img src='" +  response.volumeInfo.imageLinks.smallThumbnail +"'</div>");
-        $("#recommendations").append("<button class= 'upVoteButton' id ='" + response.id + "'>UpVote</button>");
-        $("#recommendations").append("<button class= 'downVoteButton' id ='" + response.id + "'>Downvote</button>");
+        $("#recommendations").append("<button class= 'upVoteButton' id ='" + response.id + " key="+key + "'>UpVote</button>");
+        //create value and put value inside 
+        $("#recommendations").append("<button class= 'downVoteButton' id ='" + response.id + " key="+key + "'>Downvote</button>");
         
     });
 };
@@ -87,12 +91,23 @@ $("#book-entry").on("click", function(e){
 
 
 
-function addRecommendedBookClickHandlers() {
-    $(".recommendedBookButton").on("click", function(e){
-        console.log("You clicked me!!");
-        e.preventDefault();
-        var bookID = $(this).attr("id");
-        console.log(bookID);
-        addBooktoFirebase(bookID);
-    });
-}
+$(document).on("click", ".recommendedBookButton", function(e){
+    console.log("You clicked me!!");
+    e.preventDefault();
+    var bookID = $(this).attr("id");
+    console.log(bookID);
+    addBooktoFirebase(bookID);
+});
+
+$(document).on("click", ".upVoteButton", function(){
+    var key = $(this).attr("key")
+    var value = $(this).attr("value")
+    console.log (key)
+    database.ref().child("/books/" + key).update({
+        upVotes: value+1
+    })
+    //create attr from numbera
+})
+
+//error upvotes not defined +1
+//store upotes and downvotes inside of the button, so in the onclick set it equal to 
