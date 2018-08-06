@@ -31,10 +31,18 @@ function getBooks(book) {
     for (var i = 0; i < response.items.length; i++) {
         console.log(response.items[i].volumeInfo.title);
 
-        $("#book-div").append("<div class = 'bookTitleDiv' id="+ response.items[i].id+"> <div>"+ response.items[i].volumeInfo.title +"</div>");
+        $("#book-div").append("<div class='card' style='width: 18rem;'>");
+        $("#book-div").append("<img class='card-img-top' src="+ response.items[i].volumeInfo.imageLinks.smallThumbnail + ">");
+        $("#book-div").append("<div class='card-body'>");
+        $("#book-div").append("<h5 class='card-title'>" + response.items[i].volumeInfo.title + "</h5>");
+        $("book-div").append("<p class='card-text'>" + response.items[i].volumeInfo.authors + "</p>");
+        $("#book-div").append("<button class= 'recommendedBookButton' id ='" + response.items[i].id + "'>Recommend</button>");
+        </div>
+</div>
+      /*  $("#book-div").append("<div class = 'bookTitleDiv' id="+ response.items[i].id+"> <div>"+ response.items[i].volumeInfo.title +"</div>");
         $("#book-div").append("<div class= 'bookAuthorDiv' id="+ response.items[i].id+"> <div>"+ response.items[i].volumeInfo.authors+"</div>");
         $("#book-div").append("<div class = 'bookImageDiv' id="+ response.items[i].id + "> <div>"+ "<img src='" +  response.items[i].volumeInfo.imageLinks.smallThumbnail +"'</div>");
-        $("#book-div").append("<button class= 'recommendedBookButton' id ='" + response.items[i].id + "'>Recommend</button>");
+        $("#book-div").append("<button class= 'recommendedBookButton' id ='" + response.items[i].id + "'>Recommend</button>");*/
     }  
 
 });
