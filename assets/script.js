@@ -59,13 +59,43 @@ function addBooktoFirebase(bookID) {
         });
         var key = mypush.getKey() 
         console.log(key)
-        $("#recommendations").append("<div class = 'bookTitleDivAdded' id="+ response.id+"> <div>"+ response.volumeInfo.title +"</div>");
-        $("#recommendations").append("<div class= 'bookAuthorDivAdded' id="+ response.id+"> <div>"+ response.volumeInfo.authors[0]+"</div>");
-        $("#recommendations").append("<div class = 'bookImageDivAdded' id="+ response.id + "> <div>"+ "<img src='" +  response.volumeInfo.imageLinks.smallThumbnail +"'</div>");
-        $("#recommendations").append("<button class= 'upVoteButton' id ='" + response.id + " key="+key + "'>UpVote</button>");
+        $("#recommendations").append("<div class = 'bookTitleDivAdded' id='"+ response.id+"'> <div>"+ response.volumeInfo.title +"</div>");
+        $("#recommendations").append("<div class= 'bookAuthorDivAdded' id='"+ response.id+"'> <div>"+ response.volumeInfo.authors[0]+"</div>");
+        $("#recommendations").append("<div class = 'bookImageDivAdded' id='"+ response.id + "'> <div>"+ "<img src='" +  response.volumeInfo.imageLinks.smallThumbnail +"'</div>");
+        $("#recommendations").append("<button class= 'upVoteButton' id ='" + response.id + "' key='"+ key + "'>UpVote</button>");
         //create value and put value inside 
-        $("#recommendations").append("<button class= 'downVoteButton' id ='" + response.id + " key="+key + "'>Downvote</button>");
+        $("#recommendations").append("<button class= 'downVoteButton' id ='" + response.id + "' key='"+ key + "'>Downvote</button>");
         
+    });
+};
+
+function addUpVote(key) {
+    console.log (key);
+    var upVoteValue;
+    database.ref("/books/" + key).once("value", function (snap){
+        upVoteValue = parseInt(snap.val().upVotes);
+        console.log(upVoteValue);
+        database.ref("/books/" + key).update({
+        upVotes: upVoteValue += 1 
+        }, function(error) {
+            console.log(error); 
+        }
+        );
+    });
+};
+
+function addDownVote(key) {
+    console.log (key);
+    var downVoteValue;
+    database.ref("/books/" + key).once("value", function (snap){
+        downVoteValue = parseInt(snap.val().downVotes);
+        console.log(downVoteValue);
+        database.ref("/books/" + key).update({
+        downVotes: downVoteValue += 1 
+        }, function(error) {
+            console.log(error); 
+        }
+        );
     });
 };
 
@@ -81,33 +111,45 @@ $("#book-entry").on("click", function(e){
     }, 1000);
     console.log(book)
     numberofSearches++;
-    database.ref().set({
-        numberofSearch: numberofSearches
-    });
+    database.ref("numberofSearch").set(numberofSearches);
 });
 
 //On-click function from the user recommending a book from the list of searched books 
 //The information for the selected book will first be stored to Firebase
 
 
+var addRecommendedBookClickHandlers = function(){
+    $(document).on("click", ".recommendedBookButton", function(e){
+        e.preventDefault();
+        console.log("You clicked me!!");
+        var bookID = $(this).attr("id");
+        console.log(bookID);
+        addBooktoFirebase(bookID);
+        setTimeout(function(){
+            addUpVoteBookHandlers(); 
+            addDownVoteBookHandlers();
+        }, 1000);
+    });
+};
 
-$(document).on("click", ".recommendedBookButton", function(e){
-    console.log("You clicked me!!");
-    e.preventDefault();
-    var bookID = $(this).attr("id");
-    console.log(bookID);
-    addBooktoFirebase(bookID);
-});
+//On-click function for UpVote - adds to the UpVote count in Firebase
 
-$(document).on("click", ".upVoteButton", function(){
-    var key = $(this).attr("key")
-    var value = $(this).attr("value")
-    console.log (key)
-    database.ref().child("/books/" + key).update({
-        upVotes: value+1
+var addUpVoteBookHandlers = function () {
+    $(document).on("click", ".upVoteButton", function(e){
+        e.preventDefault();
+        var key = $(".upVoteButton").attr("key"); 
+        console.log(key);
+        addUpVote(key);
     })
-    //create attr from numbera
-})
+};
 
-//error upvotes not defined +1
-//store upotes and downvotes inside of the button, so in the onclick set it equal to 
+//On-click function for DownVote - add to the DownVote count in Firebase 
+
+var addDownVoteBookHandlers = function () {
+    $(document).on("click", ".downVoteButton", function(e){
+        e.preventDefault();
+        var key = $(".downVoteButton").attr("key"); 
+        console.log(key);
+        addDownVote(key);
+    })
+};
