@@ -2,7 +2,28 @@ h1{
     font-size: 72px;
     margin-top: 8px;
     font-family: 'Cinzel', serif;
-}
-p{
+    color: whitesmoke;
+    }
+ p{
     font-family: 'Lato', sans-serif;
-}
+ }
+ body    {
+    background-color: hsla(11, 73%, 97%, 0.952);
+    background-image: url("");
+   }
+ 
+ #voting{
+    width:30px;
+    height:40px;
+ }
+ .upvote{
+    width:30px;
+    height: 20px;
+    cursor: pointer;
+ }
+ .downvote{
+    width:30px;
+    height: 20px;
+    background: url('downvote.jpg') 0 0 no-repeat;
+    cursor: pointer;
+ }
