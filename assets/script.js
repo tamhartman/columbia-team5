@@ -9,6 +9,7 @@ var config = {
   };
   firebase.initializeApp(config);
 
+
 // Create a variable to reference the database
 var database = firebase.database();
 
@@ -19,14 +20,13 @@ var numberofSearches = 0;
 function getBooks(book) {
     $.ajax({
         url: "https://www.googleapis.com/books/v1/volumes?q=" + book,
-        method:"GET"
-    }).then(function(response){
-        console.log(response);
+        method: "GET"
+    }).then(function (response) {
         var bookInfo = response.items;
-        console.log(bookInfo);
 
-//For loop for the number of results that are given from the Google API
-//Results are appended on top of one another 
+
+        //For loop for the number of results that are given from the Google API
+        //Results are appended on top of one another 
    
     for (var i = 0; i < response.items.length; i++) {
         console.log(response.items[i].volumeInfo.title);
@@ -39,34 +39,49 @@ function getBooks(book) {
 });
 
 };
-
 // //API function to get book ID information from Google API
 function addBooktoFirebase(bookID) {
     $.ajax({
         url: "https://www.googleapis.com/books/v1/volumes/" + bookID,
-        method:"GET"
-    }).then(function(response){
+        method: "GET"
+    }).then(function (response) {
         console.log(response);
-        
+
         var mypush = database.ref().child("books").push({
-            upVotes:0,
-            downVotes:0,
+            upVotes: 0,
+            downVotes: 0,
             bookStoredID: response.id,
             bookStoredTitle: response.volumeInfo.title,
             bookStoredAuthor: response.volumeInfo.authors[0],
             bookStoredImage: response.volumeInfo.imageLinks.smallThumbnail,
         });
-        var key = mypush.getKey() 
-        console.log(key)
-        $("#recommendations").append("<div class = 'bookTitleDivAdded' id='"+ response.id+"'> <div>"+ response.volumeInfo.title +"</div>");
-        $("#recommendations").append("<div class= 'bookAuthorDivAdded' id='"+ response.id+"'> <div>"+ response.volumeInfo.authors[0]+"</div>");
-        $("#recommendations").append("<div class = 'bookImageDivAdded' id='"+ response.id + "'> <div>"+ "<img src='" +  response.volumeInfo.imageLinks.smallThumbnail +"'</div>");
-        $("#recommendations").append("<button class= 'upVoteButton card-img-top' id ='" + response.id + "' key='"+ key + "'>UpVote</button>");
-        //create value and put value inside 
-        $("#recommendations").append("<button class= 'downVoteButton' id ='" + response.id + "' key='"+ key + "'>Downvote</button>");
-        
+        var key = mypush.getKey()
+        $.ajax({
+            url: "http://idreambooks.com/api/books/reviews.json?q=" + response.volumeInfo.title + "&key=c387b2b63b7a18f146681174b39950c1ce591fba",
+            method: "GET"
+        }).then(function (review) {
+            var ReviewInfo = review;
+            console.log(ReviewInfo);
+            $("#recommendations").append("<div class = 'bookTitleDivAdded' id='" + response.id + "'> <div>" + response.volumeInfo.title + "</div>");
+            $("#recommendations").append("<div class= 'bookAuthorDivAdded' id='" + response.id + "'> <div>" + response.volumeInfo.authors[0] + "</div>");
+            $("#recommendations").append("<div class = 'bookImageDivAdded' id='" + response.id + "'> <div>" + "<img src='" + response.volumeInfo.imageLinks.smallThumbnail + "'</div>");
+            $("#recommendations").append("<button class= 'upVoteButton' id ='" + response.id + "' key='" + key + "'>UpVote</button>");
+            $("#recommendations").append("<button class= 'downVoteButton' id ='" + response.id + "' key='" + key + "'>Downvote</button>");
+            if (review.book.critic_reviews.length > 0) {
+                for (var i = 0; i < 2; i++) {
+                    if (review.book.critic_reviews[i].snippet) {
+
+                        $("#recommendations").append("<div class = 'review'>" + review.book.critic_reviews[i].snippet + "</div>")
+                    }
+                }
+            }
+
+
+        })
+
     });
 };
+
 
 function addUpVote(key) {
     console.log (key);
@@ -107,7 +122,7 @@ $("#book-entry").on("click", function(e){
     getBooks(book);
     setTimeout(function(){
         addRecommendedBookClickHandlers();
-    }, 1000);
+    }, 0);
     console.log(book)
     numberofSearches++;
     database.ref("numberofSearch").set(numberofSearches);
@@ -127,11 +142,12 @@ var addRecommendedBookClickHandlers = function(){
         setTimeout(function(){
             addUpVoteBookHandlers(); 
             addDownVoteBookHandlers();
-        }, 1000);
+        }, 0);
     });
 };
 
 //On-click function for UpVote - adds to the UpVote count in Firebase
+
 
 var addUpVoteBookHandlers = function () {
     $(document).on("click", ".upVoteButton", function(e){
@@ -152,3 +168,4 @@ var addDownVoteBookHandlers = function () {
         addDownVote(key);
     })
 };
+    //reference trian exercise .child .val
