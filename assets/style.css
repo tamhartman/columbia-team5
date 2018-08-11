@@ -17,13 +17,21 @@ p{
  body{
     background-color: white;
     background-image: url("");
+    margin-left: 28px;
 }
 #card{
     width: 24rem;
-
 }
+ #book-div{
+     max-width: 240px;
+ }
+ #recommendations{
+     max-width: 860px;
+     margin-left: 0px;
+align-self: right;
+ }
  #recommendedBookButton{
-     margin: 54px;
+     margin: 28px;
  }
  #voting{
     width:30px;
