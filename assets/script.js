@@ -30,7 +30,7 @@ function getBooks(book) {
    
     for (var i = 0; i < response.items.length; i++) {
         console.log(response.items[i].volumeInfo.title);
-        $("#book-div").append("<br><div class='col-auto mb-3'><div class='card'><div class = 'bookImageDiv' id="+ response.items[i].id + "><div>"+ "<img src='" +  response.items[i].volumeInfo.imageLinks.smallThumbnail +">'</div>'");
+        $("#book-div").append("<br><div class='col><div class='card'><div class = 'bookImageDiv' id="+ response.items[i].id + "><div>"+ "<img src='" +  response.items[i].volumeInfo.imageLinks.smallThumbnail +">'</div>'");
         $("#book-div").append("<h3><div class = 'card-title bookTitleDiv' id="+ response.items[i].id+"> <div>"+ response.items[i].volumeInfo.title +"</div></h3>");
         $("#book-div").append("<div class= 'card-subtitle mb-2 text-muted bookAuthorDiv' id="+ response.items[i].id+"> <div>"+ response.items[i].volumeInfo.authors+"</div>");
         $("#book-div").append("<button class= 'recommendedBookButton btn btn-success' id ='" + response.items[i].id + "'>Recommend</button></div></div><br>");
@@ -62,11 +62,11 @@ function addBooktoFirebase(bookID) {
         }).then(function (review) {
             var ReviewInfo = review;
             console.log(ReviewInfo);
-            $("#recommendations").append("<div class = 'bookTitleDivAdded' id='" + response.id + "'> <div>" + response.volumeInfo.title + "</div>");
-            $("#recommendations").append("<div class= 'bookAuthorDivAdded' id='" + response.id + "'> <div>" + response.volumeInfo.authors[0] + "</div>");
-            $("#recommendations").append("<div class = 'bookImageDivAdded' id='" + response.id + "'> <div>" + "<img src='" + response.volumeInfo.imageLinks.smallThumbnail + "'</div>");
-            $("#recommendations").append("<button class= 'upVoteButton' id ='" + response.id + "' key='" + key + "'>UpVote</button>");
-            $("#recommendations").append("<button class= 'downVoteButton' id ='" + response.id + "' key='" + key + "'>Downvote</button>");
+            $("#recommendations").append("<br><div class='col><div class='card'><div class = 'bookImageDivAdded' id='" + response.id + "'> <div>" + "<img src='" + response.volumeInfo.imageLinks.smallThumbnail + "'</div></div></div>");
+            $("#recommendations").append("<h3><div class = 'card-title bookTitleDivAdded' id='" + response.id + "'> <div>" + response.volumeInfo.title + "</h3></div>");
+            $("#recommendations").append("<div class= 'card-subtitle mb-2 text-muted bookAuthorDivAdded' id='" + response.id + "'> <div>" + response.volumeInfo.authors[0] + "</div>");
+            $("#recommendations").append("<button class= 'btn btn-success upVoteButton' id ='" + response.id + "' key='" + key + "'>UpVote</button>");
+            $("#recommendations").append("<button class= 'btn btn-danger downVoteButton' id ='" + response.id + "' key='" + key + "'>Downvote</button>");
             if (review.book.critic_reviews.length > 0) {
                 for (var i = 0; i < 2; i++) {
                     if (review.book.critic_reviews[i].snippet) {
