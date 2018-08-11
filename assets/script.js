@@ -16,6 +16,56 @@ var database = firebase.database();
 // Use the below initialValue
 var numberofSearches = 0;
 
+//Load Recommendations upon page load from Firebase database 
+
+database.ref("/books/").on("child_added", function(snapshot){
+    console.log(snapshot.key);
+
+    database.ref("/books/" + snapshot.key).once("value", function (snap) {
+        bookTitle = snap.val().bookStoredTitle;
+        console.log(bookTitle);
+        $("#recommendations").append("<div class = 'bookTitleDivAdded'> <div>" + bookTitle + "</div>");
+
+    });
+
+    database.ref("/books/" + snapshot.key).once("value", function (snap) {
+        bookAuthor = snap.val().bookStoredAuthor;
+        console.log(bookAuthor);
+        $("#recommendations").append("<div class= 'bookAuthorDivAdded'> <div>" + bookAuthor + "</div>");
+
+    });
+
+    database.ref("/books/" + snapshot.key).once("value", function (snap) {
+        bookImage = snap.val().bookStoredImage;
+        console.log(bookImage);
+        $("#recommendations").append("<div class = 'bookImageDivAdded'> <div>" + "<img src='" + bookImage + "'</div>");
+
+    });
+
+    database.ref("/books/" + snapshot.key).once("value", function (snap) {
+        upVoteValue = parseInt(snap.val().upVotes);
+        console.log(upVoteValue);
+        $("#recommendations").append("<div class= 'upVotesDiv'> <div>" + upVoteValue + "</div>");
+        
+    });
+
+    database.ref("/books/" + snapshot.key).once("value", function (snap) {
+        downVoteValue = parseInt(snap.val().downVotes);
+        console.log(downVoteValue);
+        $("#recommendations").append("<div class= 'downVotesDiv'> <div>" + downVoteValue + "</div>");
+
+    });
+
+    database.ref("/books/" + snapshot.key).once("value", function (snap) {
+        bookID = snap.val().bookStoredID;
+        console.log(bookID);
+        $("#recommendations").append("<button class= 'btn btn-success upVoteButton' id ='" + bookID + "' key='" + snapshot.key + "'>UpVote</button>");
+        $("#recommendations").append("<button class= 'btn btn-danger downVoteButton' id ='" + bookID + "' key='" + snapshot.key + "'>Downvote</button>");
+
+    });
+
+});
+
 //API function to get book SEARCH information from Google API
 function getBooks(book) {
     $.ajax({
@@ -84,30 +134,26 @@ function addBooktoFirebase(bookID) {
 
 
 function addUpVote(key) {
-    console.log (key);
     var upVoteValue;
-    database.ref("/books/" + key).once("value", function (snap){
+    database.ref("/books/" + key).once("value", function (snap) {
         upVoteValue = parseInt(snap.val().upVotes);
-        console.log(upVoteValue);
         database.ref("/books/" + key).update({
-        upVotes: upVoteValue += 1 
-        }, function(error) {
-            console.log(error); 
+            upVotes: upVoteValue += 1
+        }, function (error) {
+            console.log(error);
         }
         );
     });
 };
 
 function addDownVote(key) {
-    console.log (key);
     var downVoteValue;
-    database.ref("/books/" + key).once("value", function (snap){
+    database.ref("/books/" + key).once("value", function (snap) {
         downVoteValue = parseInt(snap.val().downVotes);
-        console.log(downVoteValue);
         database.ref("/books/" + key).update({
-        downVotes: downVoteValue += 1 
-        }, function(error) {
-            console.log(error); 
+            downVotes: downVoteValue += 1
+        }, function (error) {
+            console.log(error);
         }
         );
     });
@@ -116,14 +162,13 @@ function addDownVote(key) {
 //On-click function when the user clicks submit 
 //Captures the user input data and then runs the getBooks function
 
-$("#book-entry").on("click", function(e){
+$("#book-entry").on("click", function (e) {
     e.preventDefault();
     var book = $("#book").val();
-    getBooks(book);
-    setTimeout(function(){
-        addRecommendedBookClickHandlers();
+    
+    setTimeout(function () {
+        getBooks(book);
     }, 0);
-    console.log(book)
     numberofSearches++;
     database.ref("numberofSearch").set(numberofSearches);
 });
@@ -132,40 +177,31 @@ $("#book-entry").on("click", function(e){
 //The information for the selected book will first be stored to Firebase
 
 
-var addRecommendedBookClickHandlers = function(){
-    $(document).on("click", ".recommendedBookButton", function(e){
-        e.preventDefault();
-        console.log("You clicked me!!");
-        var bookID = $(this).attr("id");
-        console.log(bookID);
-        addBooktoFirebase(bookID);
-        setTimeout(function(){
-            addUpVoteBookHandlers(); 
-            addDownVoteBookHandlers();
-        }, 0);
-    });
-};
+
+$(document).on("click", ".recommendedBookButton", function (e) {
+    e.preventDefault();
+    var bookID = $(this).attr("id");
+    addBooktoFirebase(bookID);
+    setTimeout(function () {
+        // addUpVoteBookHandlers();
+        // addDownVoteBookHandlers();
+    }, 0);
+});
 
 //On-click function for UpVote - adds to the UpVote count in Firebase
 
 
-var addUpVoteBookHandlers = function () {
-    $(document).on("click", ".upVoteButton", function(e){
-        e.preventDefault();
-        var key = $(".upVoteButton").attr("key"); 
-        console.log(key);
-        addUpVote(key);
-    })
-};
+$(document).on("click", ".upVoteButton", function (e) {
+    e.preventDefault();
+    var key = $(".upVoteButton").attr("key");
+    addUpVote(key);
+});
 
 //On-click function for DownVote - add to the DownVote count in Firebase 
 
-var addDownVoteBookHandlers = function () {
-    $(document).on("click", ".downVoteButton", function(e){
-        e.preventDefault();
-        var key = $(".downVoteButton").attr("key"); 
-        console.log(key);
-        addDownVote(key);
-    })
-};
-    //reference trian exercise .child .val
+
+$(document).on("click", ".downVoteButton", function (e) {
+    e.preventDefault();
+    var key = $(".downVoteButton").attr("key");
+    addDownVote(key);
+});
