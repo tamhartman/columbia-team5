@@ -4,14 +4,33 @@ h1{
     font-family: 'Cinzel', serif;
     color: whitesmoke;
     }
- p{
+h2{
+    line-height: 80%;
+}
+h3{
+    line-height: 80%;
+}
+p{
     font-family: 'Lato', sans-serif;
+    line-height: 80%;
  }
  body{
     background-color: white;
     background-image: url("");
 }
- 
+#card{
+    width: 24rem;
+
+}
+#book-submit{
+    margin-left: 28px;
+}
+ #book-div{
+     max-width: 240px;
+ }
+ #recommendedBookButton{
+     margin: 54px;
+ }
  #voting{
     width:30px;
     height:40px;

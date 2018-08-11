@@ -30,11 +30,10 @@ function getBooks(book) {
    
     for (var i = 0; i < response.items.length; i++) {
         console.log(response.items[i].volumeInfo.title);
-
-        $("#book-div").append("<div class = 'bookTitleDiv' id="+ response.items[i].id+"> <div>"+ response.items[i].volumeInfo.title +"</div>");
-        $("#book-div").append("<div class= 'bookAuthorDiv' id="+ response.items[i].id+"> <div>"+ response.items[i].volumeInfo.authors+"</div>");
-        $("#book-div").append("<div class = 'bookImageDiv' id="+ response.items[i].id + "> <div>"+ "<img src='" +  response.items[i].volumeInfo.imageLinks.smallThumbnail +"'</div>");
-        $("#book-div").append("<button class= 'recommendedBookButton' id ='" + response.items[i].id + "'>Recommend</button>");
+        $("#book-div").append("<br><div class='col-auto mb-3'><div class='card'><div class = 'bookImageDiv' id="+ response.items[i].id + "><div>"+ "<img src='" +  response.items[i].volumeInfo.imageLinks.smallThumbnail +">'</div>'");
+        $("#book-div").append("<h3><div class = 'card-title bookTitleDiv' id="+ response.items[i].id+"> <div>"+ response.items[i].volumeInfo.title +"</div></h3>");
+        $("#book-div").append("<div class= 'card-subtitle mb-2 text-muted bookAuthorDiv' id="+ response.items[i].id+"> <div>"+ response.items[i].volumeInfo.authors+"</div>");
+        $("#book-div").append("<button class= 'recommendedBookButton btn btn-success' id ='" + response.items[i].id + "'>Recommend</button></div></div><br>");
     }  
 
 });
@@ -62,7 +61,7 @@ function addBooktoFirebase(bookID) {
         $("#recommendations").append("<div class = 'bookTitleDivAdded' id='"+ response.id+"'> <div>"+ response.volumeInfo.title +"</div>");
         $("#recommendations").append("<div class= 'bookAuthorDivAdded' id='"+ response.id+"'> <div>"+ response.volumeInfo.authors[0]+"</div>");
         $("#recommendations").append("<div class = 'bookImageDivAdded' id='"+ response.id + "'> <div>"+ "<img src='" +  response.volumeInfo.imageLinks.smallThumbnail +"'</div>");
-        $("#recommendations").append("<button class= 'upVoteButton' id ='" + response.id + "' key='"+ key + "'>UpVote</button>");
+        $("#recommendations").append("<button class= 'upVoteButton card-img-top' id ='" + response.id + "' key='"+ key + "'>UpVote</button>");
         //create value and put value inside 
         $("#recommendations").append("<button class= 'downVoteButton' id ='" + response.id + "' key='"+ key + "'>Downvote</button>");
         
