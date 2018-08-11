@@ -3,6 +3,7 @@ h1{
     margin-top: 8px;
     font-family: 'Cinzel', serif;
     color: whitesmoke;
+    text-shadow: 2px 2px 5px black;
     }
 h2{
     line-height: 80%;
@@ -37,8 +38,14 @@ p{
     height:40px;
  }
  .jumbotron{
-     margin-right: 28px;
-     margin-top: 28px;
+    margin-right: 28px;
+    margin-top: 28px;
+    background-image: url('wallpaper.jpg');
+    background-repeat: no-repeat;
+    background-position: top; 
+    background-attachment: fixed;
+    background-size: 100%;
+    background:linear-gradient(rgba(0.0, 0.0, 0.0, 0.2), (0.0, 0.0, 0.0, 0.2), url('wallpaper.jpg');   
  }
  .upvote{
     width:30px;
