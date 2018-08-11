@@ -28,7 +28,6 @@ p{
  #recommendations{
      max-width: 860px;
      margin-left: 0px;
-align-self: right;
  }
  #recommendedBookButton{
      margin: 28px;
@@ -36,6 +35,10 @@ align-self: right;
  #voting{
     width:30px;
     height:40px;
+ }
+ .jumbotron{
+     margin-right: 28px;
+     margin-top: 28px;
  }
  .upvote{
     width:30px;
